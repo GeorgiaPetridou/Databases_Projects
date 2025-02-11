@@ -1,0 +1,74 @@
+-- question 1
+SELECT *
+FROM gives as G1 , Reward as R , Game as G2
+WHERE G1.ID_Reward = R.ID_Reward 
+AND G1.AFM = R.AFM  AND G1.ID_Game = G2.ID_Game
+
+-- question 2
+SELECT DISTINCT V.ID_Voted
+FROM player_votes as V
+WHERE V.ID_Council = 2
+
+
+-- question 3
+SELECT G2.Date_Game
+FROM gives as G1 join game as G2 on G1.ID_Game = G2.ID_Game
+WHERE  G1.AFM = 1597531478
+LIMIT 5
+
+
+-- question 4
+SELECT COUNT(*)
+FROM Player as P join viewer_votes as V on P.ID_Player = V.ID_Player 
+WHERE  P.Color = 'blue'
+
+
+-- question 5 exei lathos
+SELECT P.Color,COUNT(*)
+FROM Player as P join viewer_votes as V on P.ID_Player = V.ID_Player 
+GROUP BY P.Color
+HAVING COUNT(*) > 5
+
+
+-- question 6
+SELECT P.Name , P.Surname
+FROM Player as P
+WHERE P.Age > (SELECT P2.Age
+   FROM Player P2
+		   WHERE P2.Surname = 'Valavani' AND P2.Name ='Evridiki')
+
+
+-- question 7
+SELECT DISTINCT P.ID_Council
+FROM player_votes as P
+WHERE P.ID_Voted = 8 
+AND P.ID_Council NOT IN (SELECT DISTINCT P2.ID_Council
+     				       FROM player_votes as P2
+			     	       WHERE P2.ID_Voter = 9)
+
+							
+-- question 8
+SELECT  V.Phone_Number
+FROM Viewer_Votes as V, Player as P
+WHERE V.ID_Player = P.ID_Player AND P.Color = 'blue'
+AND V.Phone_Number IN (SELECT V2.Phone_Number
+     				       FROM Viewer_Votes as V2, Player as P2
+			     	       WHERE V2.ID_Player = P2.ID_Player AND P2.Color = 'red')
+							
+
+-- question 9
+SELECT P.Name, P.Surname
+FROM Player as P
+WHERE P.ID_Player NOT IN (SELECT P2.ID_Player
+   				  FROM Player as P2
+				  WHERE P2.Vote_out IS NULL)
+
+									
+-- question 10
+CREATE VIEW View1 as
+SELECT T.Name , T.badge, T.NumberOfPlayers, C.Date_Council, C.Color
+FROM Team as T join Council as C
+WHERE C.Color = T.Color;
+
+SELECT *
+FROM View1
